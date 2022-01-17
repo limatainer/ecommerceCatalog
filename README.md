@@ -9,10 +9,10 @@
 
 ## Make sure to star and fork before you clone it
 
-<img src="https://github.com/limatainer/dscatalog/blob/main/catalog_front.png"/>
+<img src="https://github.com/limatainer/ecommerceCatalog/blob/main/catalog_front.png"/>
 </br>
 </br>
-<img src="https://github.com/limatainer/dscatalog/blob/main/catalog_frontweb.png"/>
+<img src="https://github.com/limatainer/ecommerceCatalog/blob/main/catalog_frontweb.png"/>
 
 ## Fique a vontade :) Be my guest
 
