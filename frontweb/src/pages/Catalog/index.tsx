@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import Pagination from "components/Pagination";
 import ProductCard from "components/ProductCard";
 import { useEffect, useState } from "react";
