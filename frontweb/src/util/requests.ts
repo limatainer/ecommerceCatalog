@@ -1,3 +1,4 @@
+import { Axios, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import qs from 'qs';
 
@@ -34,6 +35,14 @@ export const requestBackendLogin = (loginData: LoginData) => {
   return axios({ method: 'POST', baseURL: BASE_URL, url: '/oauth/token', data, headers })
 }
 
+export const requestBackend = (config: AxiosRequestConfig) => {
+  const headers = config.withCredentials ? {
+    ...config.headers,
+    Authorization: "Bearer " + getAuthData().access_token
+  } : config.headers
+  return axios({ ...config, baseURL: BASE_URL, headers });
+}
+
 export const saveAuthData = (obj: LoginResponse) => { //local storage so trabalha com string e por isso tenho que converter para string com stringfy
   localStorage.setItem(tokenKey, JSON.stringify(obj));
 }
@@ -42,3 +51,4 @@ export const getAuthData = () => {
   const str = localStorage.getItem(tokenKey) ?? '{}';
   return JSON.parse(str) as LoginResponse
 }
+
