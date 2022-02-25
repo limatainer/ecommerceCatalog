@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import ButtonIcon from 'components/ButtonIcon';
 import { useForm, SubmitHandler } from "react-hook-form";
 import './styles.css';
-import { requestBackendLogin } from 'util/requests';
+import { getAuthData, requestBackendLogin, saveAuthData } from 'util/requests';
 import { useState } from 'react';
 
 type FormData = {
@@ -15,9 +15,12 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const onSubmit = (formData: FormData) => {
     requestBackendLogin(formData).then(response => {
+      saveAuthData(response.data); //quando o login da certo ele salva a resp no localstorage
+      const token = getAuthData().access_token;
+      console.log('TOKEN gerado: ' + token);
       console.log('SUCESSO', response)
     }).catch(error => {
-      setHasError(true)
+      setHasError(true) //isto eh para trabalhar a mensagem de erro condicional e esta configurado na div embaixo
       console.log('ERROR', error)
     })
   }
@@ -35,9 +38,15 @@ const Login = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <input
-            {...register("username", { required: 'Campo obrigatório' })}
+            {...register("username", {
+              required: 'Campo obrigatório',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Email inválido'
+              }
+            })}
             type="text"
-            className="form-control base-input"
+            className={`form-control base-input ${errors.username ? 'is-invalid' : ''}`}
             placeholder="Email"
             name="username"
           />
@@ -47,7 +56,7 @@ const Login = () => {
           <input
             {...register("password", { required: 'Campo obrigatório' })}
             type="password"
-            className="form-control base-input "
+            className={`form-control base-input ${errors.password ? 'is-invalid' : ''}`}
             placeholder="Password"
             name="password"
           />
