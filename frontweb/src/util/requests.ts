@@ -8,7 +8,7 @@ import jwtDecode from 'jwt-decode';
 
 type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN'
 
-type TokenData = {
+export type TokenData = {
   exp: number;
   user_name: string;
   authorities: Role[];
@@ -56,6 +56,10 @@ export const requestBackend = (config: AxiosRequestConfig) => {
 
 export const saveAuthData = (obj: LoginResponse) => { //local storage so trabalha com string e por isso tenho que converter para string com stringfy
   localStorage.setItem(tokenKey, JSON.stringify(obj));
+}
+
+export const removeAuthData = () => {
+  localStorage.removeItem(tokenKey)
 }
 
 export const getAuthData = () => {
