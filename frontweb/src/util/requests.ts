@@ -2,6 +2,17 @@ import { Axios, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import qs from 'qs';
 import history from './history';
+import jwtDecode from 'jwt-decode';
+
+//trabalhar a analise dos tokens e sua validade
+
+type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN'
+
+type TokenData = {
+  exp: number;
+  user_name: string;
+  authorities: Role[];
+}
 
 type LoginResponse = {
   access_token: string;
@@ -51,6 +62,8 @@ export const getAuthData = () => {
   const str = localStorage.getItem(tokenKey) ?? '{}';
   return JSON.parse(str) as LoginResponse
 }
+
+
 //Axios interceptors history
 
 // Add a request interceptor
@@ -75,3 +88,18 @@ axios.interceptors.response.use(function (response) {
   }
   return Promise.reject(error);
 });
+
+//funcao para trabalhar a validacao dos tokens
+export const getTokenData = (): TokenData | undefined => {
+  try {
+    return jwtDecode(getAuthData().access_token) as TokenData
+  } catch (error) {
+    return undefined;
+  }
+}
+
+//funcao para perguntar se a pessoa esta autenticada e vou trabalhar com a unix timestamp gerada pelo token
+export const isAuthenticated = (): boolean => {
+  const tokenData = getTokenData()
+  return (tokenData && tokenData.exp * 1000 > Date.now()) ? true : false
+}
