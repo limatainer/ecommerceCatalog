@@ -112,7 +112,7 @@ export const isAuthenticated = (): boolean => {
   return (tokenData && tokenData.exp * 1000 > Date.now()) ? true : false
 }
 
-//saber se tem alguma role
+//saber se tem alguma role para fazer na ui a restricao de conteudo caso nao tenha a role necessaria
 export const hasAnyRoles = (roles: Role[]): boolean => {
   if (roles.length === 0) {
     return true
