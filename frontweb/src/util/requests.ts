@@ -6,6 +6,8 @@ import jwtDecode from 'jwt-decode';
 
 //trabalhar a analise dos tokens e sua validade
 
+//token para role
+
 type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN'
 
 export type TokenData = {
@@ -13,6 +15,8 @@ export type TokenData = {
   user_name: string;
   authorities: Role[];
 }
+
+//tipos para a resposta do login
 
 type LoginResponse = {
   access_token: string;
@@ -23,16 +27,16 @@ type LoginResponse = {
   userId: number;
 }
 
-const tokenKey = 'authData';
-
-export const BASE_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog';
-const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog123';
-
 type LoginData = {
   username: string;
   password: string;
 }
+
+const tokenKey = 'authData';
+
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID ?? 'dscatalog';
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET ?? 'dscatalog123';
+export const BASE_URL = process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:8080';
 
 export const requestBackendLogin = (loginData: LoginData) => {
   const headers = {
@@ -106,4 +110,20 @@ export const getTokenData = (): TokenData | undefined => {
 export const isAuthenticated = (): boolean => {
   const tokenData = getTokenData()
   return (tokenData && tokenData.exp * 1000 > Date.now()) ? true : false
+}
+
+//saber se tem alguma role
+export const hasAnyRoles = (roles: Role[]): boolean => {
+  if (roles.length === 0) {
+    return true
+  }
+  const tokenData = getTokenData();
+
+  if (tokenData !== undefined) {
+    /*Eu poderia testar isso de forma bem 'provincial' com um for each
+    for (var i=0; i< role.length; i++){if(tokenData.authorities.includes(roles[i])){return true}}
+    */
+    return roles.some(role => tokenData.authorities.includes(role));
+  }
+  return false
 }
