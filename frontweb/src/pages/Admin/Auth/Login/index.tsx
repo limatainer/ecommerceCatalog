@@ -19,13 +19,13 @@ const Login = () => {
   const onSubmit = (formData: FormData) => {
     requestBackendLogin(formData).then(response => {
       saveAuthData(response.data); //quando o login da certo ele salva a resp no localstorage
-      const token = getAuthData().access_token;
-      console.log('TOKEN gerado: ' + token);
-      console.log('SUCESSO', response)
+      // const token = getAuthData().access_token;
+      // console.log('TOKEN gerado: ' + token);
+      // console.log('SUCESSO', response)
       history.push('/admin')
-    }).catch(error => {
+    }).catch((error) => {
       setHasError(true) //isto eh para trabalhar a mensagem de erro condicional e esta configurado na div embaixo
-      console.log('ERROR', error)
+      // console.log('ERROR', error)
     })
   }
   /*eu posso tambem tipar assim
