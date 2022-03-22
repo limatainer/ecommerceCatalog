@@ -9,6 +9,8 @@ import { SpringPage } from "types/vendor/spring";
 import { requestBackend } from "util/requests";
 import CardLoader from "./CardLoader";
 import './styles.css';
+
+
 const Catalog = () => {
   const [page, setPage] = useState<SpringPage<Product>>();
   const [isLoading, setIsLoading] = useState(false);
