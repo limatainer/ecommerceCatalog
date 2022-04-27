@@ -1,4 +1,4 @@
-import ProductCrudCard from 'components/ProductCrudCard'
+import ProductCrudCard from 'pages/Admin/Products/ProductCrudCard'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -27,7 +27,7 @@ export default function List() {
         <Link to="/admin/products/create">
           <button className='btn btn-primary text-white btn-crud-add'>ADICIONAR</button>
         </Link>
-        <div className='base-card product-filter-container'>Search bar</div>
+        <div className='base-card product-filter-container'>Buscar Produto</div>
       </div>
       <br />
       <div className="row">
