@@ -14,8 +14,16 @@ export default function List() {
     "date": "2020-07-13T20:50:07.123450Z",
     "categories": [
       {
+        "id": 1,
+        "name": "Diversão"
+      },
+      {
         "id": 2,
         "name": "Eletrônicos"
+      },
+      {
+        "id": 3,
+        "name": "Lazer"
       }
     ]
   }
