@@ -1,5 +1,5 @@
 .product-crud-container{ /*vai limitar o conteudo da pagina mais para o centro da tela*/
-  max-width: 960px;
+  max-width: 920px;
 }
 .btn-crud-add {
   width: 100%;
@@ -16,7 +16,7 @@
   margin-bottom: 20px;
 }
 
-@media (min-width:760px) {
+@media (min-width:768px) {
   .product-crud-bar-container {
     display: flex;
     margin-bottom: 40px;
