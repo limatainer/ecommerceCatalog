@@ -1,6 +1,6 @@
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import ButtonIcon from 'components/ButtonIcon';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import './styles.css';
 import { useContext, useState } from 'react';
 import { AuthContext } from 'AuthContext';
@@ -8,7 +8,7 @@ import { requestBackendLogin } from 'util/requests';
 import { saveAuthData } from 'util/storage';
 import { getTokenData } from 'util/auth';
 
-type FormData = {
+type CredentialsDTO = {
   username: string,
   password: string,
 };
@@ -23,11 +23,12 @@ const Login = () => {
 
   const { setAuthContextData } = useContext(AuthContext)
   const [hasError, setHasError] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+
+  const { register, handleSubmit, formState: { errors } } = useForm<CredentialsDTO>();
 
   const history = useHistory();
 
-  const onSubmit = (formData: FormData) => {
+  const onSubmit = (formData: CredentialsDTO) => {
     requestBackendLogin(formData).then(response => {
       saveAuthData(response.data); //quando o login da certo ele salva a resp no localstorage
       // const token = getAuthData().access_token;

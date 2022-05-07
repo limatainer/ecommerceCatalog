@@ -13,7 +13,7 @@ export default function List() {
 
 
   useEffect(() => {
-    const config: /*AxiosParams(antes eu criei na mao)*/ AxiosRequestConfig = {
+    const config: AxiosRequestConfig = {
       method: 'GET',
       url: '/products',
       params: {

@@ -1,18 +1,49 @@
+import { AxiosRequestConfig } from 'axios';
 import React from 'react'
+import { useForm } from 'react-hook-form';
+import { Product } from 'types/product';
+import { requestBackend } from 'util/requests';
 import './styles.css'
 
 export default function Form() {
+  const { register, handleSubmit, formState: { errors } } = useForm<Product>();
+
+
+  const onSubmit = (formData: Product) => {
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url: '/products',
+      data: formData,
+      withCredentials: true
+    }
+
+    requestBackend(config).then((response) => {
+      console.log(response.data)
+    })
+
+  }
+
   return (
     <div className='product-crud-container'>
       <div className='base-card product-crud-form-card'>
         <h1 className='product-crud-form-title'>DADOS DO PRODUTO</h1>
 
-        <form action="">
+        <form onSubmit={handleSubmit(onSubmit)}>
 
           <div className="row product-crud-inputs-container">
             <div className="col-lg-6 product-crud-inputs-left-container">
               <div className='margin-bottom-30'>
-                <input type="text" className='form-control base-input' />
+                <input
+                  {...register("name", {
+                    required: 'Campo obrigatório',
+                  })}
+                  type="text"
+                  className={`form-control base-input ${errors.name ? 'is-invalid' : ''}`}
+                  placeholder="Nome do Produto"
+                  name="name"
+                />
+                <div className="invalid-feedback d-block">{errors.name?.message}</div>
               </div>
               <div className='margin-bottom-30'>
                 <input type="text" className='form-control base-input' />
