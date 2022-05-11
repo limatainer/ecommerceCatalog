@@ -1,29 +1,51 @@
 import { AxiosRequestConfig } from 'axios';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Product } from 'types/product';
 import { requestBackend } from 'util/requests';
 import './styles.css'
 
+type UrlParams = {
+  productId: string;
+}
+
 export default function Form() {
+  const { productId } = useParams<UrlParams>();
+
+  const isEditing = productId !== 'create'
+
   const history = useHistory()
-  const { register, handleSubmit, formState: { errors } } = useForm<Product>();
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<Product>();
+
+  useEffect(() => {
+    if (isEditing) {
+      requestBackend({ url: `/products/${productId}` }).then((response) => {
+        const product = response.data as Product
+        setValue('name', product.name)
+        setValue('price', product.price)
+        setValue('description', product.description)
+        setValue('imgUrl', product.imgUrl)
+        setValue('categories', product.categories)
+      })
+    }
+  }, [isEditing, productId, setValue])
 
   const onSubmit = (formData: Product) => {
     const data = {
       ...formData,
-      imgURL: "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg",
-      categories: [{ id: 1, name: "" }],
+      imgURL: isEditing ? formData.imgUrl : "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg",
+      categories: isEditing ? formData.categories : [{ id: 1, name: "" }],
     }
     const config: AxiosRequestConfig = {
-      method: 'POST',
-      url: '/products',
+      method: isEditing ? 'PUT' : 'POST',
+      url: isEditing ? `/products/${productId}` : '/products',
       data,
       withCredentials: true
     }
-    requestBackend(config).then((response) => {
-      console.log(response.data)
+    requestBackend(config).then(() => {
+      // console.log(response.data)
+      history.push("/admin/products")
     })
   }
   const handleCancel = () => {
