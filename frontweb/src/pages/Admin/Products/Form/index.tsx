@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { Category } from 'types/category';
@@ -19,7 +19,7 @@ export default function Form() {
 
   // hooks
   const [selectCategories, setSelectCategories] = useState<Category[]>([])
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<Product>();
+  const { register, handleSubmit, formState: { errors }, setValue, control } = useForm<Product>();
 
   // useEffect EDITING
   useEffect(() => {
@@ -34,6 +34,7 @@ export default function Form() {
       })
     }
   }, [isEditing, productId, setValue])
+
   // useEffect Selector
   useEffect(() => {
     requestBackend({ url: '/categories' }).then(
@@ -87,14 +88,27 @@ export default function Form() {
                 />
                 <div className="invalid-feedback d-block">{errors.name?.message}</div>
               </div>
+              {/* selector */}
               <div className='margin-bottom-30'>
-                <Select
-                  options={selectCategories}
-                  classNamePrefix="product-crud-select"
-                  isMulti
-                  getOptionLabel={(category: Category) => category.name}
-                  getOptionValue={(category: Category) => String(category.id)}
+                <Controller
+                  name='categories'
+                  rules={{ required: true }}
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field}
+                      options={selectCategories}
+                      classNamePrefix="product-crud-select"
+                      isMulti
+                      getOptionLabel={(category: Category) => category.name}
+                      getOptionValue={(category: Category) => String(category.id)}
+                    />
+                  )}
                 />
+                {errors.categories && (
+                  <div className='invalid-feedback d-block'>
+                    Campo Obrigatório
+                  </div>
+                )}
               </div>
               <div className='margin-bottom-30'>
                 <input
@@ -123,7 +137,7 @@ export default function Form() {
               </div>
             </div>
           </div>
-
+          {/* buttons */}
           <div className='product-crud-buttons-container'>
             <button
               onClick={handleCancel}
