@@ -1,7 +1,9 @@
 import { AxiosRequestConfig } from 'axios';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
+import Select from 'react-select';
+import { Category } from 'types/category';
 import { Product } from 'types/product';
 import { requestBackend } from 'util/requests';
 import './styles.css'
@@ -12,12 +14,14 @@ type UrlParams = {
 
 export default function Form() {
   const { productId } = useParams<UrlParams>();
-
   const isEditing = productId !== 'create'
-
   const history = useHistory()
+
+  // hooks
+  const [selectCategories, setSelectCategories] = useState<Category[]>([])
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<Product>();
 
+  // useEffect EDITING
   useEffect(() => {
     if (isEditing) {
       requestBackend({ url: `/products/${productId}` }).then((response) => {
@@ -30,7 +34,16 @@ export default function Form() {
       })
     }
   }, [isEditing, productId, setValue])
+  // useEffect Selector
+  useEffect(() => {
+    requestBackend({ url: '/categories' }).then(
+      response => {
+        setSelectCategories(response.data.content)
+      }
+    )
+  }, [])
 
+  // onSubmit
   const onSubmit = (formData: Product) => {
     const data = {
       ...formData,
@@ -48,6 +61,7 @@ export default function Form() {
       history.push("/admin/products")
     })
   }
+  // handleCancel
   const handleCancel = () => {
     history.push("/admin/products")
   }
@@ -56,12 +70,12 @@ export default function Form() {
     <div className='product-crud-container'>
       <div className='base-card product-crud-form-card'>
         <h1 className='product-crud-form-title'>DADOS DO PRODUTO</h1>
-
+        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)}>
-
           <div className="row product-crud-inputs-container">
             <div className="col-lg-6 product-crud-inputs-left-container">
               <div className='margin-bottom-30'>
+                {/* inputs */}
                 <input
                   {...register("name", {
                     required: 'Campo obrigatório',
@@ -72,6 +86,15 @@ export default function Form() {
                   name="name"
                 />
                 <div className="invalid-feedback d-block">{errors.name?.message}</div>
+              </div>
+              <div className='margin-bottom-30'>
+                <Select
+                  options={selectCategories}
+                  classNamePrefix="product-crud-select"
+                  isMulti
+                  getOptionLabel={(category: Category) => category.name}
+                  getOptionValue={(category: Category) => String(category.id)}
+                />
               </div>
               <div className='margin-bottom-30'>
                 <input
