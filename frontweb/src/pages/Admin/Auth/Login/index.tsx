@@ -18,6 +18,7 @@ type LocationState = {
 }
 
 const Login = () => {
+
   const location = useLocation<LocationState>();
   const { from } = location.state || { from: { pathname: '/admin' } }
 
@@ -27,7 +28,7 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<CredentialsDTO>();
 
   const history = useHistory();
-
+  // onSubmit
   const onSubmit = (formData: CredentialsDTO) => {
     requestBackendLogin(formData).then(response => {
       saveAuthData(response.data); //quando o login da certo ele salva a resp no localstorage
@@ -48,6 +49,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<FormData> = data => console.log(data);
   */
   return (
+
     <div className="base-card login-card">
       <h1>LOGIN</h1>
       {hasError && (
@@ -55,8 +57,10 @@ const Login = () => {
           Algum campo esta errado
         </div>
       )}
+      {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
+          {/* Input */}
           <input
             {...register("username", {
               required: 'Campo obrigatório',
