@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from 'axios'
+import Pagination from 'components/Pagination'
 import ProductCrudCard from 'pages/Admin/Products/ProductCrudCard'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -47,8 +48,8 @@ export default function List() {
           </div>
 
         ))}
-
       </div>
+      <Pagination />
     </div>
   )
 }

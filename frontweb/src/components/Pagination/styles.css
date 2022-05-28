@@ -6,10 +6,20 @@
 
 .arrow-previous {
   transform: rotate(-180deg);
+  color: #ff40a6;
+}
+
+.arrow-next {
+  margin-left: 10px;
+  color: #ff40a6;
 }
 
 .arrow-inactive {
   color: #E1E1E1;
+}
+
+.arrow-active {
+  color: #ff40a6;
 }
 
 .pagination-item {
@@ -30,11 +40,6 @@
 .pagination-item.active {
   background-color: #ff40a6;
 }
-
-.arrow-next {
-  margin-left: 10px;
-}
-
-.arrow-active {
-  color: #ff40a6;
+.pagination-link-active {
+  background-color: #ff40a6;
 }
