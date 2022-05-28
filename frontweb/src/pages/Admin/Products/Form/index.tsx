@@ -4,6 +4,7 @@ import CurrencyInput from 'react-currency-input-field';
 import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 import { Category } from 'types/category';
 import { Product } from 'types/product';
 import { requestBackend } from 'util/requests';
@@ -57,7 +58,10 @@ export default function Form() {
     }
     requestBackend(config).then(() => {
       // console.log(response.data)
+      toast.info("Produto Cadastrado com Sucesso")
       history.push("/admin/products")
+    }).catch(() => {
+      toast.error("Erro ao cadastrar produto")
     })
   }
   // handleCancel
