@@ -6,18 +6,38 @@ import { Category } from 'types/category';
 import Select from 'react-select';
 import { requestBackend } from 'util/requests';
 
-type ProductFilterData = {
+export type ProductFilterData = {
   name: string;
-  category: Category;
+  category: Category | null;
 }
 
-export default function ProductFilter() {
+type Props = {
+  onSubmitFilter: (data: ProductFilterData) => void
+}
+
+export default function ProductFilter({ onSubmitFilter }: Props) {
   const [selectCategories, setSelectCategories] = useState<Category[]>([])
-  const { register, handleSubmit, control } = useForm<ProductFilterData>();
+  const { register, handleSubmit, setValue, getValues, control } = useForm<ProductFilterData>();
 
   // onSubmit
   const onSubmit = (formData: ProductFilterData) => {
-    console.log("Enviado", formData)
+    onSubmitFilter(formData)
+  }
+
+  //handleFormClear funcion
+  const handleFormClear = () => {
+    setValue('name', '')
+    setValue('category', null)
+  }
+
+  //handleChangeCategory function Selector
+  const handleChangeCategory = (value: Category) => {
+    setValue('category', value)
+    const obj: ProductFilterData = {
+      name: getValues('name'),
+      category: getValues('category')
+    }
+    onSubmitFilter(obj)
   }
 
   // useEffect Selector
@@ -61,6 +81,7 @@ export default function ProductFilter() {
                   isClearable
                   placeholder="Categoria"
                   classNamePrefix="product-filter-select"
+                  onChange={value => handleChangeCategory(value as Category)}
                   getOptionLabel={(category: Category) => category.name}
                   getOptionValue={(category: Category) => String(category.id)}
                 />
@@ -68,7 +89,7 @@ export default function ProductFilter() {
             />
           </div>
           {/* Buton */}
-          <button className='btn btn-outline-secondary btn-product-filter-clear'>Limpar <span className='btn-product-filter-word'>Filtro</span> </button>
+          <button onClick={handleFormClear} className='btn btn-outline-secondary btn-product-filter-clear'>Limpar <span className='btn-product-filter-word'>Filtro</span> </button>
         </div>
       </form>
     </div>
