@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios'
 import Pagination from 'components/Pagination'
 import ProductCrudCard from 'pages/Admin/Products/ProductCrudCard'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Product } from 'types/product'
 import { SpringPage } from 'types/vendor/spring'
@@ -9,15 +9,27 @@ import { requestBackend } from 'util/requests'
 
 import './styles.css'
 
+type ControlComponentsData = {
+  activePage: number
+}
+
 export default function List() {
   const [page, setPage] = useState<SpringPage<Product>>();
+  // mantem o estado de todos os dados de componentes que fazem controle da listagem
+  const [controlComponentsData, setControlComponentsData] = useState<ControlComponentsData>(
+    { activePage: 0 }
+  );
 
-  const getProducts = (pageNumber: number) => {
+  const handlePageChange = (pageNumber: number) => {
+    setControlComponentsData({ activePage: pageNumber })
+  }
+
+  const getProducts = useCallback(() => {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url: '/products',
       params: {
-        page: pageNumber,
+        page: controlComponentsData.activePage,
         size: 5,
       },
     };
@@ -25,11 +37,11 @@ export default function List() {
       .then((response) => {
         setPage(response.data);
       })
-  }
+  }, [controlComponentsData])
 
   useEffect(() => {
-    getProducts(0)
-  }, []);
+    getProducts()
+  }, [getProducts]);
 
   return (
     <div className='product-crud-container'>
@@ -43,7 +55,7 @@ export default function List() {
       <div className="row">
         {page?.content.map(product => (
           <div key={product.id} className="col-sm-6 col-md-12">
-            <ProductCrudCard product={product} onDelete={() => getProducts(page.number)} />
+            <ProductCrudCard product={product} onDelete={getProducts} />
           </div>
 
         ))}
@@ -51,7 +63,7 @@ export default function List() {
       <Pagination
         pageCount={(page) ? page.totalPages : 0}
         range={3}
-        onChange={getProducts}
+        onChange={handlePageChange}
       />
     </div>
   )
