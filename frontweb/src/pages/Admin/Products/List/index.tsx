@@ -12,18 +12,13 @@ import './styles.css'
 export default function List() {
   const [page, setPage] = useState<SpringPage<Product>>();
 
-
-  useEffect(() => {
-    getProducts()
-  }, []);
-
-  const getProducts = () => {
+  const getProducts = (pageNumber: number) => {
     const config: AxiosRequestConfig = {
       method: 'GET',
       url: '/products',
       params: {
-        page: 0,
-        size: 30,
+        page: pageNumber,
+        size: 5,
       },
     };
     requestBackend(config)
@@ -31,6 +26,10 @@ export default function List() {
         setPage(response.data);
       })
   }
+
+  useEffect(() => {
+    getProducts(0)
+  }, []);
 
   return (
     <div className='product-crud-container'>
@@ -44,12 +43,16 @@ export default function List() {
       <div className="row">
         {page?.content.map(product => (
           <div key={product.id} className="col-sm-6 col-md-12">
-            <ProductCrudCard product={product} onDelete={() => getProducts()} />
+            <ProductCrudCard product={product} onDelete={() => getProducts(page.number)} />
           </div>
 
         ))}
       </div>
-      <Pagination />
+      <Pagination
+        pageCount={(page) ? page.totalPages : 0}
+        range={3}
+        onChange={getProducts}
+      />
     </div>
   )
 }

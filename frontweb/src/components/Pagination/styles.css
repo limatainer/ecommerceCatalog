@@ -43,3 +43,8 @@
 .pagination-link-active {
   background-color: #ff40a6;
 }
+
+.pagination-arrow-container{
+  display: flex;
+  align-items: center;
+}
