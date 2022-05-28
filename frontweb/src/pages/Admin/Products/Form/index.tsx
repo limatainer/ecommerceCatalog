@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import React, { useEffect, useState } from 'react'
+import CurrencyInput from 'react-currency-input-field';
 import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import Select from 'react-select';
@@ -46,10 +47,12 @@ export default function Form() {
 
   // onSubmit
   const onSubmit = (formData: Product) => {
+    const data = { ...formData, price: String(formData.price).replace(',', '.') }
+
     const config: AxiosRequestConfig = {
       method: isEditing ? 'PUT' : 'POST',
       url: isEditing ? `/products/${productId}` : '/products',
-      data: formData,
+      data,
       withCredentials: true
     }
     requestBackend(config).then(() => {
@@ -71,7 +74,9 @@ export default function Form() {
           <div className="row product-crud-inputs-container">
             <div className="col-lg-6 product-crud-inputs-left-container">
               <div className='margin-bottom-30'>
-                {/* inputs */}
+                {/* INPUTS */}
+
+                {/* Input name */}
                 <input
                   {...register("name", {
                     required: 'Campo obrigatório',
@@ -105,20 +110,28 @@ export default function Form() {
                   </div>
                 )}
               </div>
+              {/* Input Price */}
               <div className='margin-bottom-30'>
-                <input
-                  {...register("price", {
-                    required: 'Campo obrigatório',
-                  })}
-                  type="text"
-                  className={`form-control base-input ${errors.price ? 'is-invalid' : ''}`}
-                  placeholder="Preço"
-                  name="price"
+                <Controller
+                  name='price'
+                  rules={{ required: 'Campo Obrigatório' }}
+                  control={control}
+                  render={({ field }) => (
+                    <CurrencyInput
+                      placeholder='Preço'
+                      className={`form-control base-input ${errors.price ? 'is-invalid' : ''}`}
+                      disableGroupSeparators={true}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      decimalsLimit={4}
+                    />
+                  )}
                 />
                 <div className="invalid-feedback d-block">{errors.price?.message}</div>
               </div>
+
+              {/* Input ImgUrl */}
               <div className='margin-bottom-30'>
-                {/* inputs */}
                 <input
                   {...register("imgUrl", {
                     required: 'Campo obrigatório',
@@ -135,7 +148,7 @@ export default function Form() {
                 <div className="invalid-feedback d-block">{errors.imgUrl?.message}</div>
               </div>
             </div>
-
+            {/* Input Descrição */}
             <div className="col-lg-6">
               <div>
                 <textarea rows={10}
@@ -150,7 +163,7 @@ export default function Form() {
               </div>
             </div>
           </div>
-          {/* buttons */}
+          {/* BUTTONS */}
           <div className='product-crud-buttons-container'>
             <button
               onClick={handleCancel}
