@@ -18,7 +18,7 @@ export default function Form() {
   const isEditing = productId !== 'create'
   const history = useHistory()
 
-  // hooks
+  // hooks estados
   const [selectCategories, setSelectCategories] = useState<Category[]>([])
   const { register, handleSubmit, formState: { errors }, setValue, control } = useForm<Product>();
 
@@ -75,7 +75,6 @@ export default function Form() {
             <div className="col-lg-6 product-crud-inputs-left-container">
               <div className='margin-bottom-30'>
                 {/* INPUTS */}
-
                 {/* Input name */}
                 <input
                   {...register("name", {

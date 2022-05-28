@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios'
 import Pagination from 'components/Pagination'
+import ProductFilter from 'components/ProductFilter'
 import ProductCrudCard from 'pages/Admin/Products/ProductCrudCard'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -49,7 +50,8 @@ export default function List() {
         <Link to="/admin/products/create">
           <button className='btn btn-primary text-white btn-crud-add'>ADICIONAR</button>
         </Link>
-        <div className='base-card product-filter-container'>Buscar Produto</div>
+        <ProductFilter />
+
       </div>
       <br />
       <div className="row">

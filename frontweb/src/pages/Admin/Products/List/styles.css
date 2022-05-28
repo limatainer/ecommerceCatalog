@@ -11,25 +11,13 @@
   letter-spacing: -0-015em;
 }
 
-.product-filter-container {
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
 @media (min-width:768px) {
   .product-crud-bar-container {
     display: flex;
     margin-bottom: 40px;
   }
-
   .btn-crud-add {
     height: 60px;
     margin-bottom: 0;
-  }
-
-  .product-filter-container {
-    margin-left: 20px;
-    margin-bottom: 0;
-    flex: 1;
   }
 }
