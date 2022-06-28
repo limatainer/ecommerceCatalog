@@ -1,33 +1,20 @@
-import jwtDecode from 'jwt-decode';
-import { getAuthData } from './storage';
-
-export type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN';
-
-export type TokenData = {
-  exp: number;
-  user_name: string;
-  authorities: Role[];
-};
-
-export const getTokenData = (): TokenData | undefined => {
-  try {
-    return jwtDecode(getAuthData().access_token) as TokenData;
-  } catch (error) {
-    return undefined;
-  }
-};
+import { Role } from 'types/role';
+import { getTokenData } from './token';
 
 export const isAuthenticated = (): boolean => {
   let tokenData = getTokenData();
   return tokenData && tokenData.exp * 1000 > Date.now() ? true : false;
 };
 
-//saber se tem alguma role para fazer na ui a restricao de conteudo caso nao tenha a role necessaria
+/*saber se O USUARIO ATUAL QUE ESTA LOGADO POSSUI ALGUM ROLE QUE ESTA NESTA LISTA roles e se 
+tem alguma role para fazer na ui a restricao de conteudo caso nao tenha a role necessaria*/
 export const hasAnyRoles = (roles: Role[]): boolean => {
   if (roles.length === 0) {
     return true
   }
-  const tokenData = getTokenData();
+  const tokenData = getTokenData(); //pega os perfis dos usuarios logados la do localStorage
+  /*se eu quiser testar esta funcao de pegar os token é melhor mocar ela ou seja, fazer uma implementação hardcoded
+  para simular o comportamento de uma outra função sem depender do comportamento desta */
 
   if (tokenData !== undefined) {
     /*Eu poderia testar isso de forma bem 'provincial' com um for each
